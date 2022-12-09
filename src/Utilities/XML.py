@@ -51,6 +51,8 @@ class XML:
                 pass
             elif tag.name == "graphic":
                 output.append(Graphic(tag, directory))
+            elif tag.name == "yesn-question-answer":
+                print("This works")
             else:
                 raise Exception(f"Unexpected for tag {tag.name}")
         return output
@@ -85,3 +87,10 @@ class XML:
         contents = XML.get_explanation_tags(soup)
         output = XML.parse_tags_to_objects(contents, directory)
         return output
+
+    @staticmethod
+    def get_multi_answer_choice_tags(soup: BeautifulSoup) -> List[Tag]:
+        choices = soup.find_all(name="multi-yesno-questions")[0].contents
+        tags = list(filter(lambda x: isinstance(x, Tag), choices))
+        return tags
+

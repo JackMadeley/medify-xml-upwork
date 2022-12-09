@@ -3,8 +3,9 @@ from bs4 import Tag
 
 class MultiYesNoAnswer(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, tag: Tag, directory: str):
+        self.answer = MultiYesNoAnswer.get_answer_bool(tag=tag)
+
 
     @staticmethod
     def get_answer_bool(tag: Tag) -> bool:
