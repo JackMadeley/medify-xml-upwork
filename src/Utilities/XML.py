@@ -2,7 +2,9 @@ from typing import List
 
 from Models.Input.Components.AnswerChoice import AnswerChoice
 from Models.Input.Components.Graphic import Graphic
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, Tag, NavigableString
+
+from Models.Input.Components.MultiYesNoAnswer import MultiYesNoAnswer
 
 
 class XML:
@@ -13,70 +15,58 @@ class XML:
         return category_name
 
     @staticmethod
-    def get_question_content_tags(soup: BeautifulSoup) -> List[Tag]:
-        question = soup.find_all(name="question")[0].contents
-        valid_tags = list(filter(lambda x: x.name == "para" or x.name == "figure",
-                                 list(filter(lambda x: isinstance(x, Tag), question))))
-        return valid_tags
-
-    @staticmethod
-    def get_explanation_tags(soup: BeautifulSoup) -> List[Tag]:
-        explanation = soup.find_all(name="explanation")[0].contents
-        tags = list(filter(lambda x: isinstance(x, Tag), explanation))
-        return tags
-
-    @staticmethod
-    def get_question_stem_tags(soup: BeautifulSoup) -> List[Tag]:
-        stem = soup.find_all(name="question-stem")[0].contents
-        tags = list(filter(lambda x: isinstance(x, Tag), stem))
-        return tags
-
-    @staticmethod
-    def get_answer_choice_tags(soup: BeautifulSoup) -> List[Tag]:
-        choices = soup.find_all(name="answer-choice-set")[0].contents
-        tags = list(filter(lambda x: isinstance(x, Tag), choices))
-        return tags
-
-    @staticmethod
-    def parse_tags_to_objects(tags: List[Tag], directory: str) -> List[object]:
+    def parse_contents_to_object(contents: List[object], directory: str) -> List[object]:
         output = []
-        for tag in tags:
-            if tag.name == "para":
-                output.append(tag.text)
-            elif tag.name == "figure":
-                graphic_tags = list(filter(lambda x: x.name == "graphic", tag.contents))
-                for graphic_tag in graphic_tags:
-                    output.append(Graphic(graphic_tag, directory))
-            elif tag.name == "br":
-                pass
-            elif tag.name == "graphic":
-                output.append(Graphic(tag, directory))
-            elif tag.name == "yesn-question-answer":
-                print("This works")
+        for tag in contents:
+            if isinstance(tag, NavigableString):
+                if tag.text == "\n":
+                    pass
+                else:
+                    output.append(tag.text)
+            elif isinstance(tag, Tag):
+                if tag.name == 'categoryrefs':
+                    pass
+                elif tag.name == 'question-stem':
+                    pass
+                elif tag.name == 'multi-yesno-questions':
+                    pass
+                elif tag.name == 'explanation':
+                    pass
+                elif tag.name == "para":
+                    output.append(tag.text)
+                elif tag.name == "figure":
+                    output.append(XML.parse_contents_to_object(tag.contents, directory))
+                elif tag.name == "br":
+                    pass
+                elif tag.name == "graphic":
+                    output.append(Graphic(tag, directory))
+                elif tag.name == "yesno-question":
+                    output.append(XML.parse_contents_to_object(tag.contents, directory))
+                else:
+                    raise Exception(f"Unexpected for tag {tag.name}")
             else:
-                raise Exception(f"Unexpected for tag {tag.name}")
+                raise Exception("Unhandled type")
         return output
 
     @staticmethod
     def get_question_contents(soup: BeautifulSoup, directory: str) -> List[object]:
-        contents = XML.get_question_content_tags(soup)
-        output = XML.parse_tags_to_objects(contents, directory)
+        question = soup.find_all(name="question")[0].contents
+        output = XML.parse_contents_to_object(question, directory)
         return output
 
     @staticmethod
     def get_question_stem_contents(soup: BeautifulSoup, directory: str) -> List[object]:
-        contents = XML.get_question_stem_tags(soup)
-        output = XML.parse_tags_to_objects(contents, directory)
+        stem = soup.find_all(name="question-stem")[0].contents
+        output = XML.parse_contents_to_object(stem, directory)
         return output
 
     @staticmethod
     def get_answer_set_contents(soup: BeautifulSoup, directory: str) -> List[AnswerChoice]:
-        contents = XML.get_answer_choice_tags(soup)
+        choices = soup.find_all(name="answer-choice-set")[0].contents
         output = []
-        for tag in contents:
+        for tag in choices:
             if tag.name == "answer-choice":
-                filtered_contents = list(filter(lambda x: isinstance(x, Tag), tag.contents))
-                answer_contents = XML.parse_tags_to_objects(filtered_contents, directory)
+                answer_contents = XML.parse_contents_to_object(tag.contents, directory)
                 output.append(AnswerChoice(tag, answer_contents))
             else:
                 raise Exception(f"Unexpected tag found {tag.name}")
@@ -84,13 +74,16 @@ class XML:
 
     @staticmethod
     def get_explanation_contents(soup: BeautifulSoup, directory: str) -> List[object]:
-        contents = XML.get_explanation_tags(soup)
-        output = XML.parse_tags_to_objects(contents, directory)
+        explanation = soup.find_all(name="explanation")[0].contents
+        output = XML.parse_contents_to_object(explanation, directory)
         return output
 
     @staticmethod
-    def get_multi_answer_choice_tags(soup: BeautifulSoup) -> List[Tag]:
-        choices = soup.find_all(name="multi-yesno-questions")[0].contents
-        tags = list(filter(lambda x: isinstance(x, Tag), choices))
-        return tags
-
+    def get_multi_answer_choice_contents(soup: BeautifulSoup, directory: str) -> List[MultiYesNoAnswer]:
+        contents = soup.find_all(name="multi-yesno-questions")[0].contents
+        output = []
+        filtered_contents = list(filter(lambda x: isinstance(x, Tag), contents))
+        for tag in filtered_contents:
+            answer_contents = XML.parse_contents_to_object(tag.contents, directory)
+            output.append(MultiYesNoAnswer(tag, answer_contents))
+        return output

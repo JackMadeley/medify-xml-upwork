@@ -1,11 +1,12 @@
 from bs4 import Tag
+from typing import List
 
 
 class MultiYesNoAnswer(object):
 
-    def __init__(self, tag: Tag, directory: str):
+    def __init__(self, tag: Tag, contents: List[object]):
         self.answer = MultiYesNoAnswer.get_answer_bool(tag=tag)
-
+        self.contents = contents
 
     @staticmethod
     def get_answer_bool(tag: Tag) -> bool:
