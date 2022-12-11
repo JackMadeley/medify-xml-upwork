@@ -1,6 +1,8 @@
+import unicodedata
 from typing import List
 
 from Models.Input.Components.AnswerChoice import AnswerChoice
+from Models.Input.Components.Emphasis import Emphasis
 from Models.Input.Components.Graphic import Graphic
 from bs4 import BeautifulSoup, Tag, NavigableString
 
@@ -8,6 +10,16 @@ from Models.Input.Components.MultiYesNoAnswer import MultiYesNoAnswer
 
 
 class XML:
+
+    @staticmethod
+    def get_character_dict() -> dict:
+        return {
+            "divide": unicodedata.lookup("Division Sign"),
+            "rsquo": unicodedata.lookup("Right Single Quotation Mark"),
+            "lsquo": unicodedata.lookup("Left Single Quotation Mark"),
+            "ndash": unicodedata.lookup("En Dash"),
+            "pound": unicodedata.lookup("Pound Sign")
+        }
 
     @staticmethod
     def get_category_name(soup: BeautifulSoup):
@@ -32,16 +44,27 @@ class XML:
                     pass
                 elif tag.name == 'explanation':
                     pass
+                elif tag.name == 'answer-choice-set':
+                    pass
                 elif tag.name == "para":
-                    output.append(tag.text)
+                    output.extend(XML.parse_contents_to_object(tag.contents, directory))
                 elif tag.name == "figure":
-                    output.append(XML.parse_contents_to_object(tag.contents, directory))
+                    output.extend(XML.parse_contents_to_object(tag.contents, directory))
                 elif tag.name == "br":
                     pass
                 elif tag.name == "graphic":
-                    output.append(Graphic(tag, directory))
+                    output.extend(Graphic(tag, directory))
                 elif tag.name == "yesno-question":
-                    output.append(XML.parse_contents_to_object(tag.contents, directory))
+                    output.extend(XML.parse_contents_to_object(tag.contents, directory))
+                elif tag.name == "entity":
+                    character_dict = XML.get_character_dict()
+                    try:
+                        character = character_dict[tag.text]
+                        output.append(character)
+                    except KeyError:
+                        Exception(f"Could not find character {tag.text} in the character dictionary")
+                elif tag.name == "emphasis":
+                    output.append(Emphasis(tag))
                 else:
                     raise Exception(f"Unexpected for tag {tag.name}")
             else:
@@ -63,8 +86,9 @@ class XML:
     @staticmethod
     def get_answer_set_contents(soup: BeautifulSoup, directory: str) -> List[AnswerChoice]:
         choices = soup.find_all(name="answer-choice-set")[0].contents
+        filtered_choices = list(filter(lambda x: isinstance(x, Tag), choices))
         output = []
-        for tag in choices:
+        for tag in filtered_choices:
             if tag.name == "answer-choice":
                 answer_contents = XML.parse_contents_to_object(tag.contents, directory)
                 output.append(AnswerChoice(tag, answer_contents))
