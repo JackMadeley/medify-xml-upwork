@@ -16,9 +16,9 @@ class XML:
         return {
             "divide": unicodedata.lookup("Division Sign"),
             "rsquo": unicodedata.lookup("Right Single Quotation Mark"),
-            "lsquo": unicodedata.lookup("Left Single Quotation Mark"),
+            "lsquo": f' {unicodedata.lookup("Left Single Quotation Mark")}',
             "ndash": unicodedata.lookup("En Dash"),
-            "pound": unicodedata.lookup("Pound Sign")
+            "pound": f' {unicodedata.lookup("Pound Sign")}'
         }
 
     @staticmethod
