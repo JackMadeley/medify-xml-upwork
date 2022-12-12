@@ -116,4 +116,4 @@ class WordDocument:
                 elif objects[i].underline == True:
                     cell.paragraphs[0].add_run(f" {objects[i].text} ").underline = True
             else:
-                print("Hello World!")
+                raise Exception(f"Unable to determine how to process type {current_type}")

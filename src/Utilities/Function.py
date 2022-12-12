@@ -49,6 +49,10 @@ class Function:
                 print("Could not find any XML files in the directory provided, please try again")
             else:
                 for file in result:
-                    Function.generate_docx(file)
+                    try:
+                        Function.generate_docx(file)
+                    except Exception as ex:
+                        print(f"File: {file} was not able to run")
+                        print(f"Exception: {ex}")
         else:
             print("Could not find the directory entered, please try again")
