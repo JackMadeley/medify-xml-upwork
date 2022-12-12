@@ -38,7 +38,8 @@ class XML:
                 if tag.text == "\n":
                     pass
                 else:
-                    output.append(tag.text.replace("\n", " ").strip())
+                    output.append(tag.text.replace("\n", " ").strip().replace("?", "? ").replace(".", ". ")
+                                  .replace("!", "! "))
             elif isinstance(tag, Tag):
                 if tag.name == 'categoryrefs':
                     pass
