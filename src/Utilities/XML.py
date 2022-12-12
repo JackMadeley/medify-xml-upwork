@@ -22,6 +22,10 @@ class XML:
         }
 
     @staticmethod
+    def get_item_name(soup: BeautifulSoup) -> str:
+        return soup.find_all("question")[0]['contentitemname']
+
+    @staticmethod
     def get_category_name(soup: BeautifulSoup):
         category_name = soup.find_all("catref-ukcat-qtopic")[0]["categoryname"]
         return category_name
@@ -34,7 +38,7 @@ class XML:
                 if tag.text == "\n":
                     pass
                 else:
-                    output.append(tag.text)
+                    output.append(tag.text.replace("\n", " ").strip())
             elif isinstance(tag, Tag):
                 if tag.name == 'categoryrefs':
                     pass
@@ -53,7 +57,7 @@ class XML:
                 elif tag.name == "br":
                     pass
                 elif tag.name == "graphic":
-                    output.extend(Graphic(tag, directory))
+                    output.append(Graphic(tag, directory))
                 elif tag.name == "yesno-question":
                     output.extend(XML.parse_contents_to_object(tag.contents, directory))
                 elif tag.name == "entity":

@@ -7,7 +7,7 @@ class Emphasis:
         self.bold = False
         self.italic = False
         self.set_attrs(tag)
-        self.text = tag.text
+        self.text = tag.text.strip()
 
     def set_attrs(self, tag: Tag):
         try:
