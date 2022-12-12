@@ -7,6 +7,7 @@ import os
 from docx.shared import Inches
 from docx.table import Table
 
+from Models.Input.Components.AnswerChoice import AnswerChoice
 from Models.Input.Components.Emphasis import Emphasis
 from Models.Input.Components.Graphic import Graphic
 from Models.Input.Components.MultiYesNoAnswer import MultiYesNoAnswer
@@ -31,14 +32,33 @@ class WordDocument:
         # Set the question stem
         WordDocument.add_list_objects_to_cell(document_table.cell(4, 1), question.question_stem)
         # Set answers
-        WordDocument.set_multi_answer(document_table, 6, question.multi_answers[0])
-        WordDocument.set_multi_answer(document_table, 7, question.multi_answers[1])
-        WordDocument.set_multi_answer(document_table, 8, question.multi_answers[2])
-        WordDocument.set_multi_answer(document_table, 9, question.multi_answers[3])
-        WordDocument.set_multi_answer(document_table, 10, question.multi_answers[4])
+        WordDocument.add_list_objects_to_cell(document_table.cell(6, 2), question.answers[0].contents)
+        WordDocument.add_list_objects_to_cell(document_table.cell(7, 2), question.answers[1].contents)
+        WordDocument.add_list_objects_to_cell(document_table.cell(8, 2), question.answers[2].contents)
+        WordDocument.add_list_objects_to_cell(document_table.cell(9, 2), question.answers[3].contents)
+        # Set correct answer
+        WordDocument.set_correct_answer(document_table.cell(10, 2), question.answers)
         # Set the explanation
         WordDocument.add_list_objects_to_cell(document_table.cell(12, 1), question.explanation)
         document.save(output_path)
+
+    @staticmethod
+    def set_correct_answer(table: Table, answers: List[AnswerChoice]):
+        states = [index for index in range(len(answers)) if
+                  answers[index].correct][0]
+        answer = None
+        if states == 0:
+            answer = "A"
+        elif states == 1:
+            answer = "B"
+        elif states == 2:
+            answer = "C"
+        elif states == 3:
+            answer = "D"
+        else:
+            raise Exception("Correct answer fell outside range A-D")
+        table.paragraphs[0].add_run(answer).bold = True
+
     @staticmethod
     def generate_five_answer_question_document(question: FiveAnswerQuestion, output_path: str):
         parent_folder = os.path.dirname(os.path.dirname(__file__))
@@ -87,8 +107,8 @@ class WordDocument:
                 paragraph_number += 1
             elif current_type is Emphasis:
                 if objects[i].bold == True:
-                    cell.paragraphs[paragraph_number].add_run().add_text(f" {objects[i].text} ").bold = True
+                    cell.paragraphs[0].add_run(f" {objects[i].text} ").bold = True
                 elif objects[i].italic == True:
-                    cell.paragraphs[paragraph_number].add_run().add_text(f" {objects[i].text} ").italic = True
+                    cell.paragraphs[0].add_run(f" {objects[i].text} ").italic = True
             else:
                 print("Hello World!")
