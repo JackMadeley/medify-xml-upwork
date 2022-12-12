@@ -7,15 +7,19 @@ import os
 from docx.shared import Inches
 from docx.table import Table
 
-from Models.Input.Components.AnswerChoice import AnswerChoice
-from Models.Input.Components.Emphasis import Emphasis
-from Models.Input.Components.Graphic import Graphic
-from Models.Input.Components.MultiYesNoAnswer import MultiYesNoAnswer
-from Models.Input.Questions.FiveAnswerQuestion import FiveAnswerQuestion
-from Models.Input.Questions.SingleAnswerQuestion import SingleAnswerQuestion
+from Models.Components.AnswerChoice import AnswerChoice
+from Models.Components.Emphasis import Emphasis
+from Models.Components.Graphic import Graphic
+from Models.Components.MultiYesNoAnswer import MultiYesNoAnswer
+from Models.Questions.FiveAnswerQuestion import FiveAnswerQuestion
+from Models.Questions.SingleAnswerQuestion import SingleAnswerQuestion
 
 
 class WordDocument:
+
+    @staticmethod
+    def get_document_name(question):
+        return question.item_name + " (" + question.category_name + ").docx"
 
     @staticmethod
     def generate_single_answer_question_document(question: SingleAnswerQuestion, output_path: str):
@@ -46,7 +50,6 @@ class WordDocument:
     def set_correct_answer(table: Table, answers: List[AnswerChoice]):
         states = [index for index in range(len(answers)) if
                   answers[index].correct][0]
-        answer = None
         if states == 0:
             answer = "A"
         elif states == 1:
@@ -102,7 +105,7 @@ class WordDocument:
                 cell.add_paragraph()
                 paragraph_number += 1
                 cell.paragraphs[paragraph_number].add_run().add_picture(image_path_or_stream=objects[i].path,
-                                                                               width=Inches(5.5))
+                                                                               width=Inches(5))
                 cell.add_paragraph()
                 paragraph_number += 1
             elif current_type is Emphasis:

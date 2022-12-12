@@ -1,12 +1,12 @@
 import unicodedata
 from typing import List
 
-from Models.Input.Components.AnswerChoice import AnswerChoice
-from Models.Input.Components.Emphasis import Emphasis
-from Models.Input.Components.Graphic import Graphic
+from Models.Components.AnswerChoice import AnswerChoice
+from Models.Components.Emphasis import Emphasis
+from Models.Components.Graphic import Graphic
 from bs4 import BeautifulSoup, Tag, NavigableString
 
-from Models.Input.Components.MultiYesNoAnswer import MultiYesNoAnswer
+from Models.Components.MultiYesNoAnswer import MultiYesNoAnswer
 
 
 class XML:
@@ -69,6 +69,10 @@ class XML:
                         Exception(f"Could not find character {tag.text} in the character dictionary")
                 elif tag.name == "emphasis":
                     output.append(Emphasis(tag))
+                elif tag.name == "list":
+                    output.extend(XML.parse_contents_to_object(tag.contents, directory))
+                elif tag.name == "listitem":
+                    output.extend(XML.parse_contents_to_object(tag.contents, directory))
                 else:
                     raise Exception(f"Unexpected for tag {tag.name}")
             else:
