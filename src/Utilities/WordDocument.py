@@ -113,5 +113,7 @@ class WordDocument:
                     cell.paragraphs[0].add_run(f" {objects[i].text} ").bold = True
                 elif objects[i].italic == True:
                     cell.paragraphs[0].add_run(f" {objects[i].text} ").italic = True
+                elif objects[i].underline == True:
+                    cell.paragraphs[0].add_run(f" {objects[i].text} ").underline = True
             else:
                 print("Hello World!")

@@ -6,6 +6,7 @@ class Emphasis:
     def __init__(self, tag: Tag):
         self.bold = False
         self.italic = False
+        self.underline = False
         self.set_attrs(tag)
         self.text = tag.text.strip()
 
@@ -16,6 +17,8 @@ class Emphasis:
                 self.bold = True
             elif emphasis_type == "italic":
                 self.italic = True
+            elif emphasis_type == "underline":
+                self.underline = True
             else:
                 raise Exception(f"Unknown emphasis type {emphasis_type}")
         except KeyError:
