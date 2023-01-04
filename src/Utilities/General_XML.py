@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup, NavigableString, Tag
 
 from Models.Components.Emphasis import Emphasis
 from Models.Components.Graphic import Graphic
+from Models.Components.XMLList import XMLList
+
 
 
 class General_XML:
@@ -52,13 +54,16 @@ class General_XML:
                 elif tag.name == "emphasis":
                     output.append(Emphasis(tag))
                 elif tag.name == "list":
-                    output.extend(General_XML.parse_component_to_object(tag.contents, directory_path))
+                    contents = General_XML.parse_component_to_object(tag.contents, directory_path)
+                    output.append(XMLList(tag, contents))
                 elif tag.name == "listitem":
-                    output.extend(General_XML.parse_component_to_object(tag.contents, directory_path))
+                    output.append(General_XML.parse_component_to_object(tag.contents, directory_path))
                 elif tag.name == "passage":
                     output.extend(General_XML.parse_component_to_object(tag.contents, directory_path))
                 elif tag.name == "span":
                     output.extend(General_XML.parse_component_to_object(tag.contents, directory_path))
+                elif tag.name == "urllink":
+                    pass
                 else:
                     raise Exception(f"Unexpected for tag {tag.name}")
             else:

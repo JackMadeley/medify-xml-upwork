@@ -61,4 +61,3 @@ class General_Question_XML:
         question_set = soup.find_all(name="question")[0]
         return question_set["contentitemname"]
 
-
