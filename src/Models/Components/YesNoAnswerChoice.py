@@ -1,6 +1,8 @@
 from typing import List
 
 from bs4 import Tag
+from docx.table import Table
+
 from Utilities.General_XML import General_XML
 
 
@@ -20,3 +22,4 @@ class YesNoAnswerChoice(object):
                 return False
         except KeyError:
             raise Exception("Could not find the answer for the ")
+

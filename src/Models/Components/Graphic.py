@@ -20,5 +20,3 @@ class Graphic(object):
         except KeyError:
             raise Exception("Could not find graphic reference link in tag")
 
-    def generate_image(self):
-        pass

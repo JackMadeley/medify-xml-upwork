@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup, NavigableString, Tag
 
 from Models.Components.Emphasis import Emphasis
 from Models.Components.Graphic import Graphic
+from Models.Components.Para import Para
 from Models.Components.XMLList import XMLList
-
 
 
 class General_XML:
@@ -35,7 +35,7 @@ class General_XML:
             elif isinstance(tag, Tag):
                 if tag.name == "para":
                     group = General_XML.parse_component_to_object(tag.contents, directory_path)
-                    output.append(group)
+                    output.append(Para(group))
                 elif tag.name == "figure":
                     output.extend(General_XML.parse_component_to_object(tag.contents, directory_path))
                 elif tag.name == "br":
