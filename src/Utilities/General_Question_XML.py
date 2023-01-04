@@ -35,8 +35,8 @@ class General_Question_XML:
     def get_question_stem_from_tag(tag: Tag, directory_path: str) -> List[object]:
         question_stem = list(filter(lambda x: x.name == 'question-stem', list(filter(lambda x: isinstance(x, Tag),
                                                                                      tag.contents))))[0].contents
-        question_stem_contests = General_XML.parse_component_to_object(question_stem, directory_path)
-        return question_stem_contests
+        question_stem_contents = General_XML.parse_component_to_object(question_stem, directory_path)
+        return question_stem_contents
 
     @staticmethod
     def get_answer_choice_set_from_tag(tag: Tag, directory_path: str) -> List[AnswerChoice]:
