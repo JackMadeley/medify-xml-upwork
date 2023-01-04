@@ -14,4 +14,3 @@ with open(file_path) as file:
     doc = DM_Docx()
     output = doc.generate_five_part_question(question)
     output.save("test.docx")
-    print(question)
