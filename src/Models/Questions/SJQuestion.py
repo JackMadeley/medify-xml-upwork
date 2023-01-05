@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
 
 from Models.Questions.Question import Question
-from Utilities.VR_XML import VR_XML
-from Utilities.General_Question_XML import General_Question_XML
+from Utilities.XML.VR_XML import VR_XML
+from Utilities.XML.General_Question_XML import General_Question_XML
 
 
 class SJQuestion(Question):

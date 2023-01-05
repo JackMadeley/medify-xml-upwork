@@ -3,7 +3,7 @@ from typing import List
 from bs4 import BeautifulSoup, Tag
 
 from Models.Components.AnswerChoice import AnswerChoice
-from Utilities.General_XML import General_XML
+from Utilities.XML.General_XML import General_XML
 
 
 class General_Question_XML:

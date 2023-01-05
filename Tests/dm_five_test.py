@@ -13,4 +13,4 @@ with open(file_path) as file:
     question = DMFiveAnswerQuestion(soup, os.path.dirname(file_path))
     doc = DM_Docx()
     output = doc.generate_five_part_question(question)
-    output.save("test.docx")
+    output.save(question.get_document_name())

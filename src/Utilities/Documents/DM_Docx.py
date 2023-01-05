@@ -20,8 +20,8 @@ class DM_Docx(Docx):
         if type(question) != DMFiveAnswerQuestion:
             raise Exception(f"A DMFiveAnswerQuestion was expected but a {type(question)} was provided")
         document = Document(self.five_part_template)
-        # Set the item name
         document_table: Table = document.tables[0]
+        # Set the item name
         document_table.cell(0, 2).text = question.item_name
         # Set the category name
         document_table.cell(0, 4).text = question.category

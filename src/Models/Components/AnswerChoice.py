@@ -1,7 +1,5 @@
-from typing import List
-
 from bs4 import Tag
-from Utilities.General_XML import General_XML
+from Utilities.XML.General_XML import General_XML
 
 
 class AnswerChoice(object):

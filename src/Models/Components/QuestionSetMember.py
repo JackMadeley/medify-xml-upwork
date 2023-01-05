@@ -1,5 +1,5 @@
 from bs4 import Tag
-from Utilities.General_Question_XML import General_Question_XML
+from Utilities.XML.General_Question_XML import General_Question_XML
 
 
 class QuestionSetMember(object):

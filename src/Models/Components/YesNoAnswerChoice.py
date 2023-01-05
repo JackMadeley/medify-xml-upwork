@@ -1,9 +1,6 @@
-from typing import List
-
 from bs4 import Tag
-from docx.table import Table
 
-from Utilities.General_XML import General_XML
+from Utilities.XML.General_XML import General_XML
 
 
 class YesNoAnswerChoice(object):

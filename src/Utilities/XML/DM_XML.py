@@ -2,7 +2,7 @@ from bs4 import Tag
 from typing import List
 
 from Models.Components.YesNoAnswerChoice import YesNoAnswerChoice
-from Utilities.General_XML import General_XML
+from Utilities.XML.General_XML import General_XML
 
 
 class DM_XML:

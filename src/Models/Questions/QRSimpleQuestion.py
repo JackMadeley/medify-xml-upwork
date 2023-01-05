@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup, Tag
 
 from Models.Questions.Question import Question
-from Utilities.DM_XML import DM_XML
-from Utilities.General_Question_XML import General_Question_XML
+from Utilities.XML.General_Question_XML import General_Question_XML
 
 
 class QRSimpleQuestion(Question):
